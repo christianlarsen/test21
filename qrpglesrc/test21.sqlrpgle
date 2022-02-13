@@ -24,16 +24,11 @@ dcl-c #OK 'S';
 dcl-s #exit01 char(1);
 dcl-s #lastnrr01 zoned(4);
 dcl-s #nbr01 zoned(4);
-dcl-ds #data qualified;
-    id zoned(4);
-    descrip varchar(30);
-    orders zoned(4);
-end-ds;
 
 // Main
 
 exsr init01;
-exsr fill01option2;
+exsr fill01;
 exsr show01;
 
 // ****************************************************************************
@@ -52,9 +47,8 @@ endsr;
 // ****************************************************************************
 // Subroutine Fill01 - Fills sfl 01 with data.
 // ****************************************************************************
-begsr fill01option1;
+begsr fill01;
 
-    // OPTION 1. Using SETLL and READ
     setll *loval rcustomers;
     dou (%eof(CUSTOMERS));
         read rcustomers;
@@ -76,50 +70,6 @@ begsr fill01option1;
             write SFLDET01;            
         endif;
     enddo;
-
-    // Saves last record number
-    #lastnrr01 = nrr01;
-    wslstnrr01 = nrr01;
-endsr;
-
-// ****************************************************************************
-// Subroutine Fill01 - Fills sfl 01 with data.
-// ****************************************************************************
-begsr fill01option2;
-
-    // OPTION 2. Using SQL.
-    exec sql
-        create view qtemp.ordersv1 as
-            select c.id , c.descrip , count(*) as orders
-            from clv1.customers c
-            join clv1.orders o on c.id = o.customerid
-            group by c.id, c.descrip;
-    exec sql
-        declare c1 cursor for
-            select * 
-            from qtemp.ordersv1
-            order by orders;
-    exec sql
-        open c1;
-    // We fetch data in a loop
-    dou (sqlcod <> 0);
-        exec sql
-            fetch c1 into :#data;
-        if (sqlcod <> 0);
-            leave;
-        endif;
-        wsid = #data.id;
-        wsdescrip = #data.descrip;
-        wsorders = #data.ORDERS;   
-        wstorders += wsorders;
-        // Add record to subfile
-        nrr01 += 1;
-        write SFLDET01;           
-    enddo;
-
-    // We close the cursor
-    exec sql
-        close c1;
 
     // Saves last record number
     #lastnrr01 = nrr01;
