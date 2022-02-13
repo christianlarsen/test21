@@ -1,0 +1,70 @@
+     A*%%TS  SD  20220205  112644  CLV         REL-V7R4M0  5770-WDS
+     A*%%EC
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      CA03(03 'End of program')
+     A          R SFLDET01                  SFL
+     A*%%TS  SD  20220205  112644  CLV         REL-V7R4M0  5770-WDS
+     A            WSOPTION01     1Y 0B  8  4EDTCDE(Z)
+     A                                      VALUES(0 5)
+     A            WSID           5Y 0O  8 10EDTCDE(Z)
+     A            WSDESCRIP     30A  O  8 20
+     A            WSORDERS       5Y 0O  8 52EDTCDE(Z)
+     A          R SFLHEA01                  SFLCTL(SFLDET01)
+     A*%%TS  SD  20220205  112644  CLV         REL-V7R4M0  5770-WDS
+     A                                      SFLSIZ(0014)
+     A                                      SFLPAG(0013)
+     A                                      CF05(05 'Update')
+     A                                      RTNCSRLOC(&WSRECNAM &WSFLDNAM)
+     A                                      OVERLAY
+     A                                      SFLCSRRRN(&WSCURSOR01)
+     A N80                                  SFLDSP
+     A N80                                  SFLDSPCTL
+     A  80                                  SFLCLR
+     A N80                                  SFLEND(*MORE)
+     A            WSRECNAM      10A  H
+     A            WSFLDNAM      10A  H
+     A            WSCURSOR01     5S 0H
+     A            NRR01          4S 0H
+     A            NBR01          4S 0H      SFLRCDNBR(CURSOR)
+     A                                  2  2' Customers '
+     A                                      DSPATR(UL)
+     A                                  7  3'Opt'
+     A                                      DSPATR(UL)
+     A                                  6  4'5=View'
+     A                                  7  7' CustomerID '
+     A                                      DSPATR(UL)
+     A                                  7 20' Customer Name                '
+     A                                      DSPATR(UL)
+     A                                  7 51' Orders '
+     A                                      DSPATR(UL)
+     A          R FOOTER01
+     A*%%TS  SD  20220205  112644  CLV         REL-V7R4M0  5770-WDS
+     A                                      OVERLAY
+     A                                 23  2'F3=End' 
+     A                                 23 10'F5=Update'
+     A            WSLSTNRR01     4Y 0O 22  2DSPATR(HI)
+     A                                      EDTCDE(Z)
+     A                                 22  7'Customers.'
+     A                                      DSPATR(HI)
+     A            WSTORDERS      6Y 0O 22 51EDTCDE(Z)
+     A                                      DSPATR(HI)
+     A          R DATA01
+     A*%%TS  SD  20220205  112644  CLV         REL-V7R4M0  5770-WDS 
+     A                                      CF05(05 'Update')
+     A                                      RTNCSRLOC(&WSRECNAM &WSFLDNAM)
+     A            WSRECNAM      10A  H
+     A            WSFLDNAM      10A  H
+     A                                  2  2' Customers '
+     A                                      DSPATR(UL)
+     A                                  7  3'Opt'
+     A                                      DSPATR(UL)
+     A                                  7  7' CustomerID '
+     A                                      DSPATR(UL)
+     A                                  7 20' Customer Name                '
+     A                                      DSPATR(UL)
+     A                                 23  2'F3=End'
+     A                                 23 10'F5=Update'
+     A                                 11  6'(No data found).'
+     A                                      DSPATR(HI)
+     A                                  7 51' Orders '
+     A                                      DSPATR(UL)
