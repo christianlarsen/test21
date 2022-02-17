@@ -5,17 +5,17 @@ dcl-f test21 workstn
     extfile(*extdesc)
     sfile(sfldet01:nrr01);
 
-dcl-f customers usage(*input)
-    extdesc('CLV1/CUSTOMERS')
-    extfile(*extdesc)
-    rename(customers:rcustomers)
-    keyed prefix(c_);
+//dcl-f customers usage(*input)
+//    extdesc('CLV1/CUSTOMERS')
+//    extfile(*extdesc)
+//    rename(customers:rcustomers)
+//    keyed prefix(c_);
 
-dcl-f ordersl1 usage(*input)
-    extdesc('CLV1/ORDERSL1')
-    extfile(*extdesc)
-    rename(orders:rordersl1)
-    keyed prefix(o_);
+//dcl-f ordersl1 usage(*input)
+//    extdesc('CLV1/ORDERSL1')
+//    extfile(*extdesc)
+//    rename(orders:rordersl1)
+//    keyed prefix(o_);
 
 // TEST21 
 // This program shows how to use a simple SFL with SQL
@@ -24,6 +24,11 @@ dcl-c #OK 'S';
 dcl-s #exit01 char(1);
 dcl-s #lastnrr01 zoned(4);
 dcl-s #nbr01 zoned(4);
+dcl-ds #data qualified;
+    id zoned(4);
+    descrip varchar(30);
+    orders zoned(4);
+end-ds;
 
 // Main
 
@@ -49,26 +54,33 @@ endsr;
 // ****************************************************************************
 begsr fill01;
 
-    setll *loval rcustomers;
-    dou (%eof(CUSTOMERS));
-        read rcustomers;
-        if (not %eof(CUSTOMERS));
-            wsid = c_id;
-            wsdescrip = c_descrip;
-            // Let's count how many orders I have from every customer...
-            wsorders = 0;
-            setll c_id rordersl1;
-            dou (%eof(ORDERSL1));
-                reade c_id rordersl1;
-                if (not %eof(ORDERSL1));
-                    wsorders += 1;
-                endif;
-            enddo;
-            wstorders += wsorders;
-            // Add record to subfile
-            nrr01 += 1;
-            write SFLDET01;            
+    exec sql
+        create view qtemp.ordersv1 as
+            select c.id, c.descrip, count(*) as orders
+            from clv1.customers c
+            join clv1.orders o on c.id = o.customerid
+            group by c.id, c.descrip;
+    exec sql
+        declare c1 cursor for
+            select * from qtemp.ordersv1 
+            order by id;
+    exec sql
+        open c1;
+    
+    // Let's fetch data in a loop
+    dou (sqlcod <> 0);
+        exec sql
+            fetch c1 into :#data;
+        if (sqlcod <> 0);
+            leave;
         endif;
+        wsid = #data.id;
+        wsdescrip = #data.descrip;
+        wsorders = #data.orders;
+        wstorders += wsorders;
+        // Add record to subfile
+        nrr01 += 1;
+        write SFLDET01;            
     enddo;
 
     // Saves last record number
