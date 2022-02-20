@@ -3,9 +3,9 @@ BIN_LIB=CMPSYS
 LIBLIST=$(BIN_LIB) CLV1
 SHELL=/QOpenSys/usr/bin/qsh
 
-all: test21.sqlrpgle
+all: test21.rpgle
 
-test21.sqlrpgle: test21.dspf
+test21.rpgle: test21.dspf
 
 %.sqlrpgle:
 	system -s "CHGATR OBJ('/home/CLV/test21/qrpglesrc/$*.sqlrpgle') ATR(*CCSID) VALUE(1252)"
@@ -15,7 +15,8 @@ test21.sqlrpgle: test21.dspf
 %.rpgle:
 	system -s "CHGATR OBJ('/home/CLV/test21/qrpglesrc/$*.rpgle') ATR(*CCSID) VALUE(1252)"
 	liblist -a $(LIBLIST);\
-	system "CRTBNDRPG PGM($(BIN_LIB)/$*) SRCSTMF('/home/CLV/test21/qrpglesrc/$*.rpgle') DBGVIEW(*SOURCE) OPTION(*EVENTF)"
+	system "CRTRPGMOD MODULE($(BIN_LIB)/$*) SRCSTMF('/home/CLV/test21/qrpglesrc/$*.rpgle') DBGVIEW(*SOURCE) OPTION(*EVENTF)"
+	system "CRTPGM PGM($(BIN_LIB)/$*) MODULE($(BIN_LIB)/$*) BNDSRVPGM($(BIN_LIB)/CUSTOMERS)"
 
 %.dspf:
 	-system -qi "CRTSRCPF FILE($(BIN_LIB)/QDDSSRC) RCDLEN(112)"

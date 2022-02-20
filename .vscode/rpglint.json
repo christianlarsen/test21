@@ -12,7 +12,7 @@
     "NoSQLJoins": true,
     "NoCTDATA": true,
     "PrettyComments": true,
-    "UppercaseDirectives": true,
+    "UppercaseDirectives": false,
     "RequireBlankSpecial": true,
     "RequiresProcedureDescription": true,
     "NoGlobalsInProcedures": true,

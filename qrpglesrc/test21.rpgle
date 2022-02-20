@@ -5,30 +5,17 @@ dcl-f test21 workstn
     extfile(*extdesc)
     sfile(sfldet01:nrr01);
 
-//dcl-f customers usage(*input)
-//    extdesc('CLV1/CUSTOMERS')
-//    extfile(*extdesc)
-//    rename(customers:rcustomers)
-//    keyed prefix(c_);
-
-//dcl-f ordersl1 usage(*input)
-//    extdesc('CLV1/ORDERSL1')
-//    extfile(*extdesc)
-//    rename(orders:rordersl1)
-//    keyed prefix(o_);
+/include "/home/CLV/customers/qrpglesrc/customers_h.rpgle"
 
 // TEST21 
 // This program shows how to use a simple SFL with SQL
+// UPDATE: now it uses functions from a SRVPGM that manages the table CUSTOMERS
 
 dcl-c #OK 'S';
 dcl-s #exit01 char(1);
 dcl-s #lastnrr01 zoned(4);
 dcl-s #nbr01 zoned(4);
-dcl-ds #data qualified;
-    id zoned(4);
-    descrip varchar(30);
-    orders zoned(4);
-end-ds;
+dcl-ds currentCustomer likeds(customer_t);
 
 // Main
 
@@ -54,34 +41,27 @@ endsr;
 // ****************************************************************************
 begsr fill01;
 
-    exec sql
-        create view qtemp.ordersv1 as
-            select c.id, c.descrip, count(*) as orders
-            from clv1.customers c
-            join clv1.orders o on c.id = o.customerid
-            group by c.id, c.descrip;
-    exec sql
-        declare c1 cursor for
-            select * from qtemp.ordersv1 
-            order by id;
-    exec sql
-        open c1;
+    if (Customers_Open());
     
-    // Let's fetch data in a loop
-    dou (sqlcod <> 0);
-        exec sql
-            fetch c1 into :#data;
-        if (sqlcod <> 0);
-            leave;
-        endif;
-        wsid = #data.id;
-        wsdescrip = #data.descrip;
-        wsorders = #data.orders;
-        wstorders += wsorders;
-        // Add record to subfile
-        nrr01 += 1;
-        write SFLDET01;            
-    enddo;
+        currentCustomer = Customers_FetchNext();
+
+        dow (Customers_IsOk());
+
+            wsid = currentCustomer.id;
+            wsdescrip = currentCustomer.descrip;
+            wsorders = 0;
+            wstorders += wsorders;
+            // Add record to subfile
+            nrr01 += 1;
+            write SFLDET01;            
+
+            currentCustomer = Customers_FetchNext();
+
+        enddo;
+
+    endif;
+
+    Customers_Close();
 
     // Saves last record number
     #lastnrr01 = nrr01;
