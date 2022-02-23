@@ -25,6 +25,11 @@ dcl-ds currentCustomer likeds(customer_t);
 // ???? if (not updateCustomer(currentCustomer));
 // ????    insertCustomer(currentCustomer);
 // ???? endif;
+if (deleteCustomer(100));
+    dsply 'Eliminado!';
+else;
+    dsply 'No lo encuentro';
+endif;
 
 exsr init01;
 exsr fill01;
