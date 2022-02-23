@@ -59,9 +59,9 @@ begsr fill01;
 
         enddo;
 
-    endif;
+        Customers_Close();
 
-    Customers_Close();
+    endif;
 
     // Saves last record number
     #lastnrr01 = nrr01;
