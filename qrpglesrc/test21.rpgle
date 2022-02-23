@@ -19,6 +19,13 @@ dcl-ds currentCustomer likeds(customer_t);
 
 // Main
 
+// Trying adding some data to CUSTOMERS
+// ???? currentCustomer.id = 100;
+// ???? currentCustomer.descrip = 'Customer 100!';
+// ???? if (not updateCustomer(currentCustomer));
+// ????    insertCustomer(currentCustomer);
+// ???? endif;
+
 exsr init01;
 exsr fill01;
 exsr show01;
