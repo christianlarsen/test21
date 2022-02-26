@@ -18,7 +18,7 @@ dcl-s #nbr01 zoned(4);
 dcl-ds currentCustomer likeds(customer_t);
 
 // Main
-
+ 
 // Trying adding some data to CUSTOMERS
 // ???? currentCustomer.id = 100;
 // ???? currentCustomer.descrip = 'Customer 100!';
