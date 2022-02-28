@@ -18,18 +18,6 @@ dcl-s #nbr01 zoned(4);
 dcl-ds currentCustomer likeds(customer_t);
 
 // Main
- 
-// Trying adding some data to CUSTOMERS
-// ???? currentCustomer.id = 100;
-// ???? currentCustomer.descrip = 'Customer 100!';
-// ???? if (not updateCustomer(currentCustomer));
-// ????    insertCustomer(currentCustomer);
-// ???? endif;
-if (deleteCustomer(100));
-    dsply 'Eliminado!';
-else;
-    dsply 'No lo encuentro';
-endif;
 
 exsr init01;
 exsr fill01;
@@ -55,19 +43,22 @@ begsr fill01;
 
     if (Customers_Open());
     
-        currentCustomer = Customers_FetchNext();
+        dou (not Customers_isOk());
 
-        dow (Customers_IsOk());
+            currentCustomer = Customers_FetchNext();
+            if (not Customers_isOk());
+                leave;
+            endif;
 
             wsid = currentCustomer.id;
             wsdescrip = currentCustomer.descrip;
             wsorders = 0;
+
+            // Add to subtotals
             wstorders += wsorders;
             // Add record to subfile
             nrr01 += 1;
             write SFLDET01;            
-
-            currentCustomer = Customers_FetchNext();
 
         enddo;
 
