@@ -10,6 +10,8 @@ dcl-f test21 workstn
 // TEST21 
 // This program shows how to use a simple SFL with SQL
 // UPDATE: now it uses functions from a SRVPGM that manages the table CUSTOMERS
+// UPDATE: now it uses functions from a SRVPGM that manages the table ORDERS
+
 
 dcl-c #OK 'S';
 dcl-s #exit01 char(1);
