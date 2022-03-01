@@ -1,4 +1,5 @@
 **free
+ctl-opt bnddir('CLV1/CUSTOMERS');
 
 dcl-f test21 workstn
     extdesc('CLV1/TEST21')
@@ -6,12 +7,11 @@ dcl-f test21 workstn
     sfile(sfldet01:nrr01);
 
 /include "/home/CLV/customers/qrpglesrc/customers_h.rpgle"
+/include "/home/CLV/orders/qrpglesrc/orders_h.rpgle"
+
 
 // TEST21 
 // This program shows how to use a simple SFL with SQL
-// UPDATE: now it uses functions from a SRVPGM that manages the table CUSTOMERS
-// UPDATE: now it uses functions from a SRVPGM that manages the table ORDERS
-
 
 dcl-c #OK 'S';
 dcl-s #exit01 char(1);
@@ -43,18 +43,21 @@ endsr;
 // ****************************************************************************
 begsr fill01;
 
+    // I open the cursor
     if (Customers_Open());
-    
+
+        // Do this while Customers_isOk is "1"    
         dou (not Customers_isOk());
 
+            // I fetch data from the cursor
             currentCustomer = Customers_FetchNext();
             if (not Customers_isOk());
                 leave;
             endif;
-
+            // I move the data retrieve from the cursor to the subfile fields
             wsid = currentCustomer.id;
             wsdescrip = currentCustomer.descrip;
-            wsorders = 0;
+            wsorders = getNumofCustomerOrders(currentCustomer.id);
 
             // Add to subtotals
             wstorders += wsorders;
@@ -118,6 +121,10 @@ endsr;
 // Subroutine endpgm - Ends program.
 // ****************************************************************************
 begsr endpgm;
+
+    // ??? Test!
+    // ??? deleteCustomer(5);
+    
     *inlr = '1';
     return;
 endsr;
@@ -126,4 +133,10 @@ endsr;
 // Subroutine *inzsr 
 // ****************************************************************************
 begsr *inzsr;
+
+    // ??? Test!
+    // ??? currentCustomer.id = 5;
+    // ??? currentCustomer.descrip = 'Customer FIVE';
+    // ??? addCustomer(currentCustomer);
+
 endsr;
