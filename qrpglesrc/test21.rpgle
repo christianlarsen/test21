@@ -18,6 +18,7 @@ dcl-s #exit01 char(1);
 dcl-s #lastnrr01 zoned(4);
 dcl-s #nbr01 zoned(4);
 dcl-ds #customer likeds(customer_t);
+dcl-ds #customerlist likeds(customer_t) dim(10000);
 
 // Main
 
