@@ -96,23 +96,21 @@ begsr show01;
         endif;
 
         select;
-        // F3=End
-        when (*inkc);
-            exsr endpgm;
-        // F5=Update
-        when (*inke);
-            #exit01 = #OK;
-        // Intro
-        other;
-            if (nrr01 > 0 and wscursor01 > 0);
-                #nbr01 = wscursor01;
-            else;
-                #nbr01 = 1;
-            endif;
-            // Selected records
-            if (nrr01 > 0);
-            //    exsr select01;
-            endif;
+            when (*inkc);
+                // F3=End Program
+                exsr endpgm;
+            when (*inke);
+                // F5=Update
+                #exit01 = #OK;
+            other;
+                // Enter
+                if (nrr01 > 0 and wscursor01 > 0);
+                    #nbr01 = wscursor01;
+                else;
+                    #nbr01 = 1;
+                endif;
+                if (nrr01 > 0);
+                endif;
         endsl;
     enddo;
 endsr;
@@ -123,7 +121,7 @@ endsr;
 begsr endpgm;
 
     // ??? Test!
-    //deleteCustomer(5);
+    // deleteCustomer(5);
     
     *inlr = '1';
     return;
@@ -135,9 +133,9 @@ endsr;
 begsr *inzsr;
 
     // ??? Test!
-    //currentCustomer.id = 5;
-    //currentCustomer.descrip = 'Customer FIVE';
-    //currentCustomer.descri2 = 'Customer FIVE(2b)';
-    //addCustomer(currentCustomer);
+    // currentCustomer.id = 5;
+    // currentCustomer.descrip = 'Customer FIVE';
+    // currentCustomer.descri2 = 'Customer FIVE(2b)';
+    // addCustomer(currentCustomer);
 
 endsr;
