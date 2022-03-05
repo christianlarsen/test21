@@ -123,7 +123,7 @@ endsr;
 begsr endpgm;
 
     // ??? Test!
-    // ??? deleteCustomer(5);
+    //deleteCustomer(5);
     
     *inlr = '1';
     return;
@@ -135,8 +135,9 @@ endsr;
 begsr *inzsr;
 
     // ??? Test!
-    // ??? currentCustomer.id = 5;
-    // ??? currentCustomer.descrip = 'Customer FIVE';
-    // ??? addCustomer(currentCustomer);
+    //currentCustomer.id = 5;
+    //currentCustomer.descrip = 'Customer FIVE';
+    //currentCustomer.descri2 = 'Customer FIVE(2b)';
+    //addCustomer(currentCustomer);
 
 endsr;
