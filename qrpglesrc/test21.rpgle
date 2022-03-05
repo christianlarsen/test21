@@ -6,12 +6,12 @@ dcl-f test21 workstn
     extfile(*extdesc)
     sfile(sfldet01:nrr01);
 
-/include "/home/CLV/customers/qrpglesrc/customers_h.rpgle"
-/include "/home/CLV/orders/qrpglesrc/orders_h.rpgle"
-
-
 // TEST21 
 // This program shows how to use a simple SFL with SQL
+
+// My "includes"
+/include "/home/CLV/customers/qrpglesrc/customers_h.rpgle"
+/include "/home/CLV/orders/qrpglesrc/orders_h.rpgle"
 
 dcl-c #OK 'S';
 dcl-s #exit01 char(1);
