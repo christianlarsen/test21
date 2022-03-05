@@ -17,7 +17,7 @@ dcl-c #OK 'S';
 dcl-s #exit01 char(1);
 dcl-s #lastnrr01 zoned(4);
 dcl-s #nbr01 zoned(4);
-dcl-ds currentCustomer likeds(customer_t);
+dcl-ds #customer likeds(customer_t);
 
 // Main
 
@@ -50,14 +50,14 @@ begsr fill01;
         dou (not Customers_isOk());
 
             // I fetch data from the cursor
-            currentCustomer = Customers_FetchNext();
+            #customer = Customers_FetchNext();
             if (not Customers_isOk());
                 leave;
             endif;
             // I move the data retrieve from the cursor to the subfile fields
-            wsid = currentCustomer.id;
-            wsdescrip = currentCustomer.descrip;
-            wsorders = getNumofCustomerOrders(currentCustomer.id);
+            wsid = #customer.id;
+            wsdescrip = #customer.descrip;
+            wsorders = getNumofCustomerOrders(#customer.id);
 
             // Add to subtotals
             wstorders += wsorders;
@@ -133,9 +133,9 @@ endsr;
 begsr *inzsr;
 
     // ??? Test!
-    // currentCustomer.id = 5;
-    // currentCustomer.descrip = 'Customer FIVE';
-    // currentCustomer.descri2 = 'Customer FIVE(2b)';
-    // addCustomer(currentCustomer);
+    // #customer.id = 5;
+    // #customer.descrip = 'Customer FIVE';
+    // #customer.descri2 = 'Customer FIVE(2b)';
+    // addCustomer(#customer);
 
 endsr;
