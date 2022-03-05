@@ -44,13 +44,13 @@ endsr;
 begsr fill01;
 
     // I open the cursor
-    if (Customers_ByName_Open());
+    if (Customers_Open());
 
         // Do this while Customers_isOk is "1"    
         dou (not Customers_isOk());
 
             // I fetch data from the cursor
-            #customer = Customers_ByName_FetchNext();
+            #customer = Customers_FetchNext();
             if (not Customers_isOk());
                 leave;
             endif;
@@ -67,7 +67,7 @@ begsr fill01;
 
         enddo;
 
-        Customers_ByName_Close();
+        Customers_Close();
 
     endif;
 
