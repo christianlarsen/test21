@@ -18,7 +18,6 @@ dcl-s #exit01 char(1);
 dcl-s #lastnrr01 zoned(4);
 dcl-s #nbr01 zoned(4);
 dcl-ds #customer likeds(customer_t);
-dcl-ds #customerlist likeds(customer_t) dim(10000);
 
 // Main
 
@@ -120,10 +119,6 @@ endsr;
 // Subroutine endpgm - Ends program.
 // ****************************************************************************
 begsr endpgm;
-
-    // ??? Test!
-    // deleteCustomer(5);
-    
     *inlr = '1';
     return;
 endsr;
@@ -132,11 +127,4 @@ endsr;
 // Subroutine *inzsr 
 // ****************************************************************************
 begsr *inzsr;
-
-    // ??? Test!
-    // #customer.id = 5;
-    // #customer.descrip = 'Customer FIVE';
-    // #customer.descri2 = 'Customer FIVE(2b)';
-    // addCustomer(#customer);
-
 endsr;
