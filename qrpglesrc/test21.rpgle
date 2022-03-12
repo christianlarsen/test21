@@ -17,6 +17,7 @@ dcl-c #OK 'S';
 dcl-s #exit01 char(1);
 dcl-s #lastnrr01 zoned(4);
 dcl-s #nbr01 zoned(4);
+dcl-s #a zoned(4);
 dcl-ds #customer likeds(customer_t);
 
 // Main
@@ -110,9 +111,33 @@ begsr show01;
                     #nbr01 = 1;
                 endif;
                 if (nrr01 > 0);
+                    exsr select01;
                 endif;
         endsl;
     enddo;
+endsr;
+
+// ****************************************************************************
+// Subroutine Select01 -
+// ****************************************************************************
+begsr select01;
+
+    for #a = 1 to #lastnrr01;
+        chain #a SFLDET01;
+        if (%found and wsoption01 <> 0);
+            select;
+                when (wsoption01 = 4);
+                    // 4=Delete
+                    // Trying to delete a customer
+                    deleteCustomer(wsid);
+                    
+                when (wsoption01 = 5);
+                    // 5=View
+                    // ???????
+            endsl;
+        endif;
+    endfor;
+
 endsr;
 
 // ****************************************************************************

@@ -5,7 +5,7 @@
      A          R SFLDET01                  SFL
      A*%%TS  SD  20220205  112644  CLV         REL-V7R4M0  5770-WDS
      A            WSOPTION01     1Y 0B  8  4EDTCDE(Z)
-     A                                      VALUES(0 5)
+     A                                      VALUES(0 4 5)
      A            WSID           5Y 0O  8 10EDTCDE(Z)
      A            WSDESCRIP     30A  O  8 20
      A            WSORDERS       5Y 0O  8 52EDTCDE(Z)
@@ -30,7 +30,8 @@
      A                                      DSPATR(UL)
      A                                  7  3'Opt'
      A                                      DSPATR(UL)
-     A                                  6  4'5=View'
+     A                                  6  4'4=Delete'
+     A                                  6 13'5=View'
      A                                  7  7' CustomerID '
      A                                      DSPATR(UL)
      A                                  7 20' Customer Name                '
