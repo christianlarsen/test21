@@ -141,6 +141,9 @@ begsr select01;
                     // 5=View
                     // ???????
             endsl;
+            wsoption01 = 0;
+            #nbr01 = #a;
+            update SFLDET01;
         endif;
     endfor;
 
