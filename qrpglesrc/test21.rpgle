@@ -15,6 +15,8 @@ dcl-f test21 workstn
 
 dcl-c #OK 'S';
 dcl-s #exit01 char(1);
+dcl-s #exit02w char(1);
+dcl-s #exit03w char(1);
 dcl-s #lastnrr01 zoned(4);
 dcl-s #nbr01 zoned(4);
 dcl-s #a zoned(4);
@@ -129,7 +131,11 @@ begsr select01;
                 when (wsoption01 = 4);
                     // 4=Delete
                     // Trying to delete a customer
-                    deleteCustomer(wsid);
+                    if (deleteCustomer(wsid));
+                        exsr show02w;
+                    else;
+                        exsr show03w;
+                    endif;
                     
                 when (wsoption01 = 5);
                     // 5=View
@@ -138,6 +144,50 @@ begsr select01;
         endif;
     endfor;
 
+endsr;
+
+// ****************************************************************************
+// Subroutine Show02w - Shows window 02.
+// ****************************************************************************
+begsr show02w;
+    
+    #exit02w = *blanks;
+    dou (#exit02w = #OK);
+
+        exfmt WINDOW02;
+
+        select;
+            when (*inkc);
+                // F3=End Program
+                exsr endpgm;
+            when (*inkl);
+                // F12=Back
+                #exit02w = #OK;
+                #exit01 = #OK;
+        endsl;
+    enddo;
+endsr;
+
+// ****************************************************************************
+// Subroutine Show03w - Shows window 03.
+// ****************************************************************************
+begsr show03w;
+    
+    #exit03w = *blanks;
+    dou (#exit03w = #OK);
+
+        exfmt WINDOW03;
+
+        select;
+            when (*inkc);
+                // F3=End Program
+                exsr endpgm;
+            when (*inkl);
+                // F12=Back
+                #exit03w = #OK;
+                #exit01 = #OK;
+        endsl;
+    enddo;
 endsr;
 
 // ****************************************************************************

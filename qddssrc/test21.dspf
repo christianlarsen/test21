@@ -69,3 +69,27 @@
      A                                      DSPATR(HI)
      A                                  7 51' Orders '
      A                                      DSPATR(UL)
+     A          R WINDOW02
+     A*%%TS  SD  20220312  173614  CLV         REL-V7R4M0  5770-WDS
+     A                                      CA12(12 'Back')
+     A                                      WINDOW(15 20 7 40)
+     A                                      WDWBORDER((*COLOR BLU) (*DSPATR RI)-
+     A                                       (*CHAR '        '))
+     A                                  3  2'Customer has been succesfully dele-
+     A                                      ted.'
+     A                                      DSPATR(HI)
+     A                                  6  1'F3=End'
+     A                                  6  8'F12=Back'
+     A          R WINDOW03
+     A*%%TS  SD  20220312  173614  CLV         REL-V7R4M0  5770-WDS
+     A                                      CA12(12 'Back')
+     A                                      WINDOW(15 20 7 40)
+     A                                      WDWBORDER((*COLOR BLU) (*DSPATR RI)-
+     A                                       (*CHAR '        '))
+     A                                  3  6'Customer has not been deleted.'
+     A                                      DSPATR(HI)
+     A                                  6  1'F3=End'
+     A                                  6  8'F12=Back'
+     A                                  1 17' WARNING '
+     A                                      COLOR(RED)
+     A                                      DSPATR(RI)
