@@ -7,7 +7,10 @@ dcl-f test21 workstn
     sfile(sfldet01:nrr01);
 
 // TEST21 
-// This program shows how to use a simple SFL with SQL
+// This program shows how to use a simple SFL
+// - It uses procedures of service programs.
+// - No files declared.
+// - No SQL instruction used.
 
 // My "includes"
 /include "/home/CLV/customers/qrpglesrc/customers_h.rpgle"
@@ -141,7 +144,7 @@ begsr select01;
                     
                 when (wsoption01 = 5);
                     // 5=View
-                    // ???????
+                    // TO-DO
             endsl;
             wsoption01 = 0;
             #nbr01 = #a;
