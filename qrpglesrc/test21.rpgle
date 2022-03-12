@@ -132,8 +132,10 @@ begsr select01;
                     // 4=Delete
                     // Trying to delete a customer
                     if (deleteCustomer(wsid));
+                        // If success, shows message.
                         exsr show02w;
                     else;
+                        // If not, shows error message.
                         exsr show03w;
                     endif;
                     
