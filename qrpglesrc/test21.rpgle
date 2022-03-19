@@ -24,8 +24,14 @@ dcl-s #lastnrr01 zoned(4);
 dcl-s #nbr01 zoned(4);
 dcl-s #a zoned(4);
 dcl-ds #customer likeds(customer_t);
+dcl-ds #customerList likeds(customer_t) dim(10000);
+dcl-s #customers varchar(2000000);
 
 // Main
+
+//????? Tests
+#customerList = getCustomerList();
+//?????
 
 exsr init01;
 exsr fill01;

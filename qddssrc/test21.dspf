@@ -7,6 +7,7 @@
      A            WSOPTION01     1Y 0B  8  4EDTCDE(Z)
      A                                      VALUES(0 4 5)
      A            WSID           5Y 0O  8 10EDTCDE(Z)
+     A                                      DSPATR(HI)
      A            WSDESCRIP     30A  O  8 20
      A            WSORDERS       5Y 0O  8 52EDTCDE(Z)
      A          R SFLHEA01                  SFLCTL(SFLDET01)
