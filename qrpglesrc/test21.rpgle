@@ -24,14 +24,15 @@ dcl-s #lastnrr01 zoned(4);
 dcl-s #nbr01 zoned(4);
 dcl-s #a zoned(4);
 dcl-ds #customer likeds(customer_t);
-dcl-ds #customerList likeds(customer_t) dim(10000);
-dcl-s #customers varchar(2000000);
+dcl-ds #customerList likeds(customerList_t) inz(*likeds);
+dcl-s #customerListJSON varchar(2000000) inz;
 
 // Main
 
-//????? Tests
-#customerList = getCustomerList();
-//?????
+// ????? Tests
+#customerList = getCustomerlist();
+#customerListJSON = getCustomerListJSON();
+// ?????
 
 exsr init01;
 exsr fill01;
