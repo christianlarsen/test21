@@ -32,6 +32,9 @@ dcl-s #customerListJSON varchar(2000000) inz;
 // ????? Tests
 #customerList = getCustomerlist();
 #customerListJSON = getCustomerListJSON();
+
+#customerList = getCustomerListFromJSON(#customerListJSON);
+
 // ?????
 
 exsr init01;
@@ -211,10 +214,4 @@ endsr;
 begsr endpgm;
     *inlr = '1';
     return;
-endsr;
-
-// ****************************************************************************
-// Subroutine *inzsr 
-// ****************************************************************************
-begsr *inzsr;
 endsr;
