@@ -16,7 +16,7 @@ test21.rpgle: test21.dspf
 	system -s "CHGATR OBJ('/home/CLV/test21/qrpglesrc/$*.rpgle') ATR(*CCSID) VALUE(1252)"
 	liblist -a $(LIBLIST);\
 	system "CRTRPGMOD MODULE($(BIN_LIB)/$*) SRCSTMF('/home/CLV/test21/qrpglesrc/$*.rpgle') DBGVIEW(*SOURCE) OPTION(*EVENTF)"
-	system "CRTPGM PGM($(BIN_LIB)/$*) MODULE($(BIN_LIB)/$*)"
+	system "CRTPGM PGM($(BIN_LIB)/$*) MODULE($(BIN_LIB)/$*) ACTGRP($*)"
 
 %.dspf:
 	-system -qi "CRTSRCPF FILE($(BIN_LIB)/QDDSSRC) RCDLEN(112)"

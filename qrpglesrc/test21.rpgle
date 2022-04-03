@@ -63,6 +63,7 @@ dcl-proc processSubfile01;
     dcl-s #nbr01 zoned(4);
     dcl-ds #customer likeds(customer_t) inz(*likeds);
 
+    // Loop until #exit is "OK"
     #exit = *blanks;
     dou (#exit = #OK);
         exsr init;
@@ -140,7 +141,7 @@ dcl-proc processSubfile01;
                     return;
                 when (*inke);
                     // F5=Update
-                    #exit = #OK;
+                    #exit01 = #OK;
                 other;
                     // Enter
                     if (nrr01 > 0 and wscursor01 > 0);
