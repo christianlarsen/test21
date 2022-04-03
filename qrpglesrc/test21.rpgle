@@ -17,201 +17,250 @@ dcl-f test21 workstn
 /include "/home/CLV/orders/qrpglesrc/orders_h.rpgle"
 
 dcl-c #OK 'S';
-dcl-s #exit01 char(1);
-dcl-s #exit02w char(1);
-dcl-s #exit03w char(1);
-dcl-s #lastnrr01 zoned(4);
-dcl-s #nbr01 zoned(4);
-dcl-s #a zoned(4);
-dcl-ds #customer likeds(customer_t);
-dcl-ds #customerList likeds(customerList_t) inz(*likeds);
-dcl-s #customerListJSON varchar(2000000) inz;
 
 // Main
 
-// ????? Tests
-#customerList = getCustomerlist();
-#customerListJSON = getCustomerListJSON();
+// doTests();
 
-#customerList = getCustomerListFromJSON(#customerListJSON);
+processSubfile01();
 
-// ?????
+endPgm();
 
-exsr init01;
-exsr fill01;
-exsr show01;
+///
+// doTests
+// Subprocedure just for testing
+///
+dcl-proc doTests;
 
-// ****************************************************************************
-// Subroutine Init01 - Inicializes sfl 01.
-// ****************************************************************************
-begsr init01;
-    *in80 = '1';
-    write SFLHEA01;
-    *in80 = '0';
-    nrr01 = 0;
-    nbr01 = 1;
-    // Inicializa subtotales
-    wstorders = 0;
-endsr;
+    dcl-pi doTests;
+    end-pi;
+    
+    dcl-ds #customerList likeds(customerList_t) inz(*likeds);
+    dcl-s #customerListJSON varchar(2000000) inz;
 
-// ****************************************************************************
-// Subroutine Fill01 - Fills sfl 01 with data.
-// ****************************************************************************
-begsr fill01;
+    // Tests
+    #customerList = getCustomerlist();
+    #customerListJSON = getCustomerListJSON();
+    #customerList = getCustomerListFromJSON(#customerListJSON);
 
-    // I open the cursor
-    if (Customers_Open());
+    return;
 
-        // Do this while Customers_isOk is "1"    
-        dou (not Customers_isOk());
+end-proc;
 
-            // I fetch data from the cursor
-            #customer = Customers_FetchNext();
-            if (not Customers_isOk());
-                leave;
+///
+// processSubfile01
+// Subprocedure that processes subfile01.
+///
+dcl-proc processSubfile01;
+
+    dcl-pi processSubfile01;
+    end-pi;
+
+    dcl-s #a zoned(4);
+    dcl-s #exit char(1);
+    dcl-s #exit01 char(1);
+    dcl-s #lastnrr01 zoned(4);
+    dcl-s #nbr01 zoned(4);
+    dcl-ds #customer likeds(customer_t) inz(*likeds);
+
+    #exit = *blanks;
+    dou (#exit = #OK);
+        exsr init;
+        exsr fill;
+        exsr show;
+    enddo;
+
+    return;
+
+    // Initializes subfile01
+    begsr init;
+        *in80 = '1';
+        write SFLHEA01;
+        *in80 = '0';
+        nrr01 = 0;
+        nbr01 = 1;
+        // Inicializa subtotales
+        wstorders = 0;
+    endsr;
+
+    // Fills subfile01
+    begsr fill;
+        // I open the cursor
+        if (Customers_Open());
+
+            // Do this while Customers_isOk is "1"    
+            dou (not Customers_isOk());
+
+                // I fetch data from the cursor
+                #customer = Customers_FetchNext();
+                if (not Customers_isOk());
+                    leave;
+                endif;
+                // I move the data retrieve from the cursor to the subfile fields
+                wsid = #customer.id;
+                wsdescrip = #customer.descrip;
+                wsorders = getNumofCustomerOrders(#customer.id);
+
+                // Add to subtotals
+                wstorders += wsorders;
+                // Add record to subfile
+                nrr01 += 1;
+                write SFLDET01;            
+
+            enddo;
+
+            Customers_Close();
+
+        endif;
+
+        // Saves last record number
+        #lastnrr01 = nrr01;
+        wslstnrr01 = nrr01;
+    endsr;
+
+    // Shows subfile01
+    begsr show;
+        #exit01 = *blanks;
+        dou (#exit01 = #OK);
+            if (#nbr01 > 0 and #nbr01 <= #lastnrr01);
+                nbr01 = #nbr01;
             endif;
-            // I move the data retrieve from the cursor to the subfile fields
-            wsid = #customer.id;
-            wsdescrip = #customer.descrip;
-            wsorders = getNumofCustomerOrders(#customer.id);
+            #nbr01 = 0;
 
-            // Add to subtotals
-            wstorders += wsorders;
-            // Add record to subfile
-            nrr01 += 1;
-            write SFLDET01;            
+            if (nrr01 > 0);
+                write FOOTER01;
+                exfmt SFLHEA01;
+            else;
+                exfmt DATA01;
+            endif;
 
-        enddo;
-
-        Customers_Close();
-
-    endif;
-
-    // Saves last record number
-    #lastnrr01 = nrr01;
-    wslstnrr01 = nrr01;
-endsr;
-
-// ****************************************************************************
-// Subroutine Show01 - Shows sfl 01.
-// ****************************************************************************
-begsr show01;
-    
-    #exit01 = *blanks;
-    dou (#exit01 = #OK);
-        if (#nbr01 > 0 and #nbr01 <= #lastnrr01);
-            nbr01 = #nbr01;
-        endif;
-        #nbr01 = 0;
-
-        if (nrr01 > 0);
-            write FOOTER01;
-            exfmt SFLHEA01;
-        else;
-            exfmt DATA01;
-        endif;
-
-        select;
-            when (*inkc);
-                // F3=End Program
-                exsr endpgm;
-            when (*inke);
-                // F5=Update
-                #exit01 = #OK;
-            other;
-                // Enter
-                if (nrr01 > 0 and wscursor01 > 0);
-                    #nbr01 = wscursor01;
-                else;
-                    #nbr01 = 1;
-                endif;
-                if (nrr01 > 0);
-                    exsr select01;
-                endif;
-        endsl;
-    enddo;
-endsr;
-
-// ****************************************************************************
-// Subroutine Select01 -
-// ****************************************************************************
-begsr select01;
-
-    for #a = 1 to #lastnrr01;
-        chain #a SFLDET01;
-        if (%found and wsoption01 <> 0);
             select;
-                when (wsoption01 = 4);
-                    // 4=Delete
-                    // Trying to delete a customer
-                    if (deleteCustomer(wsid));
-                        // If success, shows message.
-                        exsr show02w;
+                when (*inkc);
+                    // F3=End Program
+                    return;
+                when (*inke);
+                    // F5=Update
+                    #exit = #OK;
+                other;
+                    // Enter
+                    if (nrr01 > 0 and wscursor01 > 0);
+                        #nbr01 = wscursor01;
                     else;
-                        // If not, shows error message.
-                        exsr show03w;
+                        #nbr01 = 1;
                     endif;
-                    
-                when (wsoption01 = 5);
-                    // 5=View
-                    // TO-DO
+                    if (nrr01 > 0);
+                        exsr processRecords;
+                    endif;
             endsl;
-            wsoption01 = 0;
-            #nbr01 = #a;
-            update SFLDET01;
-        endif;
-    endfor;
+        enddo;
+    endsr;
 
-endsr;
+    // Selection of records in subfile01
+    begsr processRecords;
+        for #a = 1 to #lastnrr01;
+            chain #a SFLDET01;
+            if (%found and wsoption01 <> 0);
+                select;
+                    when (wsoption01 = 4);
+                        // 4=Delete
+                        // Trying to delete a customer
+                        if (deleteCustomer(wsid));
+                            // If success, shows message.
+                            processWindow02();
+                        else;
+                            // If not, shows error message.
+                            processWindow03();
+                        endif;
+                    
+                    when (wsoption01 = 5);
+                        // 5=View
+                        // TO-DO
+                endsl;
+                wsoption01 = 0;
+                #nbr01 = #a;
+                update SFLDET01;
+            endif;
+        endfor;
+    endsr;
 
-// ****************************************************************************
-// Subroutine Show02w - Shows window 02.
-// ****************************************************************************
-begsr show02w;
+end-proc;
+
+///
+// window02_show
+// Shows window02
+///
+dcl-proc processWindow02;
+
+    dcl-pi processWindow02;
+    end-pi;
+
+    dcl-s #exit02w char(1);
     
-    #exit02w = *blanks;
-    dou (#exit02w = #OK);
+    exsr show;
 
-        exfmt WINDOW02;
+    return;
 
-        select;
-            when (*inkc);
-                // F3=End Program
-                exsr endpgm;
-            when (*inkl);
-                // F12=Back
-                #exit02w = #OK;
-                #exit01 = #OK;
-        endsl;
-    enddo;
-endsr;
+    begsr show;
+        #exit02w = *blanks;
+        dou (#exit02w = #OK);
 
-// ****************************************************************************
-// Subroutine Show03w - Shows window 03.
-// ****************************************************************************
-begsr show03w;
+            exfmt WINDOW02;
+
+            select;
+                when (*inkc);
+                    // F3=End Program
+                    return;
+                when (*inkl);
+                    // F12=Back
+                    #exit02w = #OK;
+            endsl;
+        enddo;
+    endsr;
+
+end-proc;
+
+///
+// window03_show
+// Shows window03
+///
+dcl-proc processWindow03;
+
+    dcl-pi processWindow03; 
+    end-pi;
     
-    #exit03w = *blanks;
-    dou (#exit03w = #OK);
+    dcl-s #exit03w char(1);
 
-        exfmt WINDOW03;
 
-        select;
-            when (*inkc);
-                // F3=End Program
-                exsr endpgm;
-            when (*inkl);
-                // F12=Back
-                #exit03w = #OK;
-                #exit01 = #OK;
-        endsl;
-    enddo;
-endsr;
+    exsr show;
 
-// ****************************************************************************
-// Subroutine endpgm - Ends program.
-// ****************************************************************************
-begsr endpgm;
+    return;
+
+    begsr show;    
+        #exit03w = *blanks;
+        dou (#exit03w = #OK);
+
+            exfmt WINDOW03;
+
+            select;
+                when (*inkc);
+                    // F3=End Program
+                    return;
+                when (*inkl);
+                    // F12=Back
+                    #exit03w = #OK;
+            endsl;
+        enddo;
+    endsr;
+end-proc;
+
+///
+// endpgm
+// Ends program.
+///
+dcl-proc endPgm;
+    dcl-pi endpgm;
+    end-pi;
+
     *inlr = '1';
     return;
-endsr;
+end-proc;
