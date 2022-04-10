@@ -14,7 +14,8 @@ dcl-f test21 workstn
 
 // My "includes"
 /include "/home/CLV/customers/qrpglesrc/customers_h.rpgle"
-/include "/home/CLV/orders/qrpglesrc/orders_h.rpgle"
+// Not needed anymore...
+// /include "/home/CLV/orders/qrpglesrc/orders_h.rpgle"
 
 dcl-c #OK 'S';
 
@@ -64,7 +65,7 @@ dcl-proc processSubfile01;
     dcl-s #exit01 char(1);
     dcl-s #lastnrr01 zoned(4);
     dcl-s #nbr01 zoned(4);
-    dcl-ds #customer likeds(customer_t) inz(*likeds);
+    dcl-ds #customer likeds(customer_orders_t) inz(*likeds);
 
     // Loop until #exit is "OK"
     #exit = *blanks;
@@ -90,20 +91,21 @@ dcl-proc processSubfile01;
     // Fills subfile01
     begsr fill;
         // I open the cursor
-        if (Customers_Open());
+        if (Customers_Orders_Open());
 
             // Do this while Customers_isOk is "1"    
             dou (not Customers_isOk());
 
                 // I fetch data from the cursor
-                #customer = Customers_FetchNext();
+                #customer = Customers_Orders_FetchNext();
                 if (not Customers_isOk());
                     leave;
                 endif;
                 // I move the data retrieve from the cursor to the subfile fields
                 wsid = #customer.id;
                 wsdescrip = #customer.descrip;
-                wsorders = getNumofCustomerOrders(#customer.id);
+                // wsorders = getNumofCustomerOrders(#customer.id);
+                wsorders = #customer.orders;
 
                 // Add to subtotals
                 wstorders += wsorders;
@@ -113,7 +115,7 @@ dcl-proc processSubfile01;
 
             enddo;
 
-            Customers_Close();
+            Customers_Orders_Close();
 
         endif;
 
