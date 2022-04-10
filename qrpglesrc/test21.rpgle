@@ -22,8 +22,11 @@ dcl-c #OK 'S';
 
 // doTests();
 
+// Process subfile 01
+// - Initialize + Fill + Show data
 processSubfile01();
 
+// - End program
 endPgm();
 
 ///
