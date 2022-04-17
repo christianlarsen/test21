@@ -15,8 +15,6 @@ dcl-f test21 workstn
 
 // My "includes"
 /include "/home/CLV/customers/qrpglesrc/customers_h.rpgle"
-// Not needed anymore...
-// /include "/home/CLV/orders/qrpglesrc/orders_h.rpgle"
 
 // Structure for the display indicadors
 dcl-ds #wsind qualified;
@@ -25,7 +23,7 @@ dcl-ds #wsind qualified;
     back ind pos(12);
     clearSfl ind pos(80);
 end-ds;
-
+// Constants
 dcl-c #OK 'S';
 
 // Main
@@ -36,7 +34,7 @@ dcl-c #OK 'S';
 // - Initialize + Fill + Show data
 processSubfile01();
 
-// - End program
+// - Ends Program
 endPgm();
 
 ///
