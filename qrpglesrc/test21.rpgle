@@ -199,8 +199,8 @@ dcl-proc processSubfile01;
 end-proc;
 
 ///
-// window02_show
-// Shows window02
+// processWindow02
+// Subprocedure that processes window02.
 ///
 dcl-proc processWindow02;
 
@@ -233,8 +233,8 @@ dcl-proc processWindow02;
 end-proc;
 
 ///
-// window03_show
-// Shows window03
+// processWindow03
+// Subprocedure that processes window03.
 ///
 dcl-proc processWindow03;
 
