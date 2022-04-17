@@ -1,6 +1,7 @@
      A*%%TS  SD  20220205  112644  CLV         REL-V7R4M0  5770-WDS
      A*%%EC
      A                                      DSPSIZ(24 80 *DS3)
+     A                                      INDARA
      A                                      CA03(03 'End of program')
      A          R SFLDET01                  SFL
      A*%%TS  SD  20220205  112644  CLV         REL-V7R4M0  5770-WDS

@@ -4,7 +4,8 @@ ctl-opt bnddir('CLV1/CUSTOMERS');
 dcl-f test21 workstn
     extdesc('CLV1/TEST21')
     extfile(*extdesc)
-    sfile(sfldet01:nrr01);
+    sfile(sfldet01:nrr01)
+    indds(#wsind);
 
 // TEST21 
 // This program shows how to use a simple SFL
@@ -16,6 +17,14 @@ dcl-f test21 workstn
 /include "/home/CLV/customers/qrpglesrc/customers_h.rpgle"
 // Not needed anymore...
 // /include "/home/CLV/orders/qrpglesrc/orders_h.rpgle"
+
+// Structure for the display indicadors
+dcl-ds #wsind qualified;
+    endOfPgm ind pos(3);
+    updateDsp ind pos(5);
+    back ind pos(12);
+    clearSfl ind pos(80);
+end-ds;
 
 dcl-c #OK 'S';
 
@@ -79,9 +88,9 @@ dcl-proc processSubfile01;
 
     // Initializes subfile01
     begsr init;
-        *in80 = '1';
+        #wsind.clearSfl = *ON;
         write SFLHEA01;
-        *in80 = '0';
+        #wsind.clearSfl = *OFF;
         nrr01 = 0;
         nbr01 = 1;
         // Inicializa subtotales
@@ -141,10 +150,10 @@ dcl-proc processSubfile01;
             endif;
 
             select;
-                when (*inkc);
+                when (#wsind.endOfPgm);
                     // F3=End Program
                     return;
-                when (*inke);
+                when (#wsind.updateDsp);
                     // F5=Update
                     #exit01 = #OK;
                 other;
@@ -213,10 +222,10 @@ dcl-proc processWindow02;
             exfmt WINDOW02;
 
             select;
-                when (*inkc);
+                when (#wsind.endOfPgm);
                     // F3=End Program
                     return;
-                when (*inkl);
+                when (#wsind.back);
                     // F12=Back
                     #exit02w = #OK;
             endsl;
@@ -236,7 +245,6 @@ dcl-proc processWindow03;
     
     dcl-s #exit03w char(1);
 
-
     exsr show;
 
     return;
@@ -248,10 +256,10 @@ dcl-proc processWindow03;
             exfmt WINDOW03;
 
             select;
-                when (*inkc);
+                when (#wsind.endOfPgm);
                     // F3=End Program
                     return;
-                when (*inkl);
+                when (#wsind.back);
                     // F12=Back
                     #exit03w = #OK;
             endsl;
