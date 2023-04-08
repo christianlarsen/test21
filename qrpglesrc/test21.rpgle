@@ -5,7 +5,8 @@ dcl-f test21 workstn
     extdesc('CLV1/TEST21')
     extfile(*extdesc)
     sfile(sfldet01:nrr01)
-    indds(#wsind);
+    indds(#wsind)
+    usropn;
 
 // TEST21 
 // This program shows how to use a simple SFL
@@ -28,7 +29,6 @@ end-ds;
 // Constants
 dcl-c #OK 'S';
 
-
 ///
 // main
 // main subprocedure
@@ -37,6 +37,10 @@ dcl-proc main;
 
     dcl-s #exit char(1);
     dcl-s #lastnrr01 zoned(4);
+
+    if not %open(TEST21);
+        open TEST21;
+    endif;
 
     // Loop until #exit is "OK"
     #exit = *blanks;
@@ -47,6 +51,9 @@ dcl-proc main;
             #exit = #OK;
         endif;
     enddo;
+
+on-exit;
+    close *all;
 
 end-proc;
 
