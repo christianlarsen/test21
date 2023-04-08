@@ -5,18 +5,18 @@ SHELL=/QOpenSys/usr/bin/qsh
 
 all: test21.rpgle
 
-test21.rpgle: test21.dspf
+test21.sqlrpgle: test21.dspf
 
 %.sqlrpgle:
-	system -s "CHGATR OBJ('/home/CLV/test21/qrpglesrc/$*.sqlrpgle') ATR(*CCSID) VALUE(1252)"
+	system -s "CHGATR OBJ('/home/CLV/test21/qsqlsrc/$*.sqlrpgle') ATR(*CCSID) VALUE(1252)"
 	liblist -a $(LIBLIST);\
-	system "CRTSQLRPGI OBJ($(BIN_LIB)/$*) SRCSTMF('/home/CLV/test21/qrpglesrc/$*.sqlrpgle') COMMIT(*NONE) DBGVIEW(*SOURCE) OPTION(*EVENTF)"
+	system "CRTSQLRPGI OBJ($(BIN_LIB)/$*) SRCSTMF('/home/CLV/test21/qsqlsrc/$*.sqlrpgle') COMMIT(*NONE) DBGVIEW(*SOURCE) OPTION(*EVENTF)"
 
 %.rpgle:
 	system -s "CHGATR OBJ('/home/CLV/test21/qrpglesrc/$*.rpgle') ATR(*CCSID) VALUE(1252)"
 	liblist -a $(LIBLIST);\
 	system "CRTRPGMOD MODULE($(BIN_LIB)/$*) SRCSTMF('/home/CLV/test21/qrpglesrc/$*.rpgle') DBGVIEW(*SOURCE) OPTION(*EVENTF)"
-	system "CRTPGM PGM($(BIN_LIB)/$*) MODULE($(BIN_LIB)/$*) ACTGRP($*)"
+	system "CRTPGM PGM($(BIN_LIB)/$*) MODULE($(BIN_LIB)/$*) ACTGRP(*NEW)"
 
 %.dspf:
 	-system -qi "CRTSRCPF FILE($(BIN_LIB)/QDDSSRC) RCDLEN(112)"
