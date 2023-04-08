@@ -146,7 +146,7 @@ dcl-proc show01;
                 return '1';
             when (#wsind.updateDsp);
                 // F5=Update
-                #exit01 = #OK;
+                return '0';
             other;
                 // Enter
                 if (nrr01 > 0 and wscursor01 > 0);
@@ -218,30 +218,38 @@ dcl-proc processWindow02;
     dcl-pi processWindow02 ind;
     end-pi;
 
+    if show02();
+        return '1';
+    endif;
+
+    return '0';
+end-proc;
+
+///
+// show02
+// Shows window02
+///
+dcl-proc show02;
+
+    dcl-pi *n ind;
+    end-pi;
+
     dcl-s #exit02w char(1);
-    dcl-s #endwithF3 ind inz('0');
 
-    exsr show;
+    #exit02w = *blanks;
+    dou (#exit02w = #OK);
 
-    return #endwithF3;
+        exfmt WINDOW02;
 
-    begsr show;
-        #exit02w = *blanks;
-        dou (#exit02w = #OK);
-
-            exfmt WINDOW02;
-
-            select;
-                when (#wsind.endOfPgm);
-                    // F3=End Program
-                    #endwithF3 = '1';
-                    return #endwithF3;
-                when (#wsind.back);
-                    // F12=Back
-                    #exit02w = #OK;
-            endsl;
-        enddo;
-    endsr;
+        select;
+            when (#wsind.endOfPgm);
+                // F3=End Program
+                return '1';
+            when (#wsind.back);
+                // F12=Back
+                return '0';
+        endsl;
+    enddo;
 
 end-proc;
 
@@ -253,29 +261,38 @@ dcl-proc processWindow03;
 
     dcl-pi processWindow03 ind;
     end-pi;
-    
+
+    if show03();
+        return '1';
+    endif;
+
+    return '0';
+end-proc;
+
+///
+// show03
+// Shows window03
+///
+dcl-proc show03;
+
+    dcl-pi *n ind;
+    end-pi;
+
     dcl-s #exit03w char(1);
-    dcl-s #endwithF3 ind inz('0');
 
-    exsr show;
+    #exit03w = *blanks;
+    dou (#exit03w = #OK);
 
-    return #endwithF3;
+        exfmt WINDOW03;
 
-    begsr show;    
-        #exit03w = *blanks;
-        dou (#exit03w = #OK);
+        select;
+            when (#wsind.endOfPgm);
+                // F3=End Program
+                return '1';
+            when (#wsind.back);
+                // F12=Back
+                return '0';
+        endsl;
+    enddo;
 
-            exfmt WINDOW03;
-
-            select;
-                when (#wsind.endOfPgm);
-                    // F3=End Program
-                    #endwithF3 = '1';
-                    return #endwithF3;
-                when (#wsind.back);
-                    // F12=Back
-                    #exit03w = #OK;
-            endsl;
-        enddo;
-    endsr;
 end-proc;
