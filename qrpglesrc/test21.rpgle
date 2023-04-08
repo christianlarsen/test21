@@ -38,6 +38,7 @@ dcl-proc main;
     dcl-s #exit char(1);
     dcl-s #lastnrr01 zoned(4);
 
+    // Let's open the display file
     if not %open(TEST21);
         open TEST21;
     endif;
@@ -75,7 +76,7 @@ end-proc;
 
 ///
 // fill01
-// Fills subfile01
+// Fills subfile01. Returns the number of records in the subfile.
 ///
 dcl-proc fill01;
 
@@ -122,7 +123,7 @@ end-proc;
 
 ///
 // show01
-// Shows subfile01
+// Shows subfile01. Returns '1' if F3 was pressed.
 ///
 dcl-proc show01;
 
@@ -173,7 +174,7 @@ end-proc;
 
 ///
 // processRecords01
-// Selection of records in subfile01
+// Selection of records in subfile01. Returns '1' if F3 was pressed in a sub-window.
 ///
 dcl-proc processRecords01;
 
@@ -218,7 +219,7 @@ end-proc;
 
 ///
 // processWindow02
-// Subprocedure that processes window02.
+// Subprocedure that processes window02. Returns '1' if F3 was pressed.
 ///
 dcl-proc processWindow02;
 
@@ -234,7 +235,7 @@ end-proc;
 
 ///
 // show02
-// Shows window02
+// Shows window02. Returns '1' if F3 was pressed.
 ///
 dcl-proc show02;
 
@@ -262,7 +263,7 @@ end-proc;
 
 ///
 // processWindow03
-// Subprocedure that processes window03.
+// Subprocedure that processes window03. Returns '1' if F3 was pressed.
 ///
 dcl-proc processWindow03;
 
@@ -278,7 +279,7 @@ end-proc;
 
 ///
 // show03
-// Shows window03
+// Shows window03. Returns '1' if F3 was pressed.
 ///
 dcl-proc show03;
 
